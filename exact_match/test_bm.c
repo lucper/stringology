@@ -35,5 +35,14 @@ int main(int argc, char **argv) {
     for (int i = 0; i < n; ++i)
         printf("%d %c = %d\n", i, pat[i], L[i]);
 
+    printf("\n");
+
+    printf("l' values (length of largest suffix of P[i..n-1] that is also prefix of P; if none exists, set to zero.\n");
+    printf("    Theorem 2.2.4. l'(i) is largest j <= |P[i..n-1]| such that N_j = j (look at N values)\n");
+    int l[n];
+    l_vals(pat, n, l);
+    for (int i = 0; i < n; ++i)
+        printf("%d %c = %d\n", i, pat[i], l[i]);
+
     return EXIT_SUCCESS;
 }
