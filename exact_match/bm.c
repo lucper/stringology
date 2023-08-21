@@ -19,10 +19,10 @@ void N_vals(const char *pat, int n, int N[]) {
   *
   * Theorem 2.2.2. L'(i) is the largest index j < n-1 such that N_j = |P[i..n-1]|. */
 void L_vals(const char *pat, int n, int L[]) {
+    for (int i = 0; i < n; ++i) L[i] = 0;
+
     int N[n];
     N_vals(pat, n, N);
-    for (int i = 0; i < n; ++i)
-        L[i] = 0;
     for (int j = 0; j < n-1; ++j)
         if (N[j] > 0)
             L[n-N[j]] = j;
@@ -33,7 +33,16 @@ void L_vals(const char *pat, int n, int L[]) {
  *
  * Theorem 2.2.4. l'(i) is the largest j < |P[i..n-1]| such that N_j = j. */
 void l_vals(const char *pat, int n, int l[]) {
-   ; 
+    for (int i = 0; i < n; ++i) l[i] = 0;
+
+    int N[n];
+    N_vals(pat, n, N);
+    for (int j = 0; j < n; ++j)
+        if (N[j] == j+1)
+            l[n-j-1] = j+1;
+    for (int j = n-2; j >= 0; --j) // "smear" them out to the left
+        if (l[j] == 0)
+            l[j] = l[j+1];
 }
 
 void bm_pmatch(const char *pat, int n, const char *txt, int m, int L[], int l[], int R[]);
