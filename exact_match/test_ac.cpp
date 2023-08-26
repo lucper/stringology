@@ -14,7 +14,7 @@ int main() {
     int failure[maxStates];
     int output[maxStates];
 
-    memset(output, false, sizeof(output));
+    memset(output, 0, sizeof(output));
     memset(go, -1, sizeof(go));
     memset(failure, -1, sizeof(failure));
 

@@ -5,15 +5,16 @@ void buildAutomaton(const std::vector<std::string>& arr, int go[][MAXC], int out
     int states = 1;
 
     // Build trie, i.e. fill go[][]
-    for (auto& pattern : arr) {
+    for (int i = 0; i < arr.size(); ++i) {
+        const std::string& pattern = arr[i];
         int currentState = 0;
-        for (int i = 0; i < pattern.size(); ++i) {
-            int ch = pattern[i] - 'a';
+        for (int j = 0; j < pattern.size(); ++j) {
+            int ch = pattern[j] - 'a';
             if (go[currentState][ch] == -1)
                 go[currentState][ch] = states++;
             currentState = go[currentState][ch];
         }
-        output[currentState] = true;
+        output[currentState] |= (1 << i);
     }
 
     for (int ch = 0; ch < MAXC; ++ch)
@@ -53,7 +54,7 @@ void buildAutomaton(const std::vector<std::string>& arr, int go[][MAXC], int out
 }
 
 int findNextState(int currentState, char nextInput, int go[][MAXC], int failure[]) {
-    int ch = nextInput -'a';
+    int ch = nextInput - 'a';
 
     while (go[currentState][ch] == -1)
         currentState = failure[currentState];
