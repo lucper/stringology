@@ -48,6 +48,8 @@ void buildAutomaton(const std::vector<std::string>& arr, int go[][MAXC], int out
                 failure[go[state][ch]] = go[f][ch]; // done with GOAL
                 // End of inductive step
 
+                output[go[state][ch]] |= output[go[f][ch]]; // merge output values???
+
                 Q.push(go[state][ch]);
             }
     }
@@ -67,6 +69,7 @@ void search(const std::vector<std::string>& patterns, const std::string& text, i
 
     for (int i = 0; i < text.length(); ++i) {
         currentState = findNextState(currentState, text[i], go, failure);
+        std::cout << "Next state of " << text[i] << " is " << currentState << std::endl;
         if (output[currentState] == 0)
             continue;
         for (int j = 0; j < patterns.size(); ++j)
