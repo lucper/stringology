@@ -55,9 +55,22 @@ void buildAutomaton(const std::vector<std::string>& arr, int go[][MAXC], int out
 
 int findNextState(int currentState, char nextInput, int go[][MAXC], int failure[]) {
     int ch = nextInput - 'a';
-
     while (go[currentState][ch] == -1)
         currentState = failure[currentState];
-
     return go[currentState][ch];
+}
+
+void search(const std::vector<std::string>& patterns, const std::string& text, int go[][MAXC], int output[], int failure[]) {
+    buildAutomaton(patterns, go, output, failure);
+
+    int currentState = 0;
+
+    for (int i = 0; i < text.length(); ++i) {
+        currentState = findNextState(currentState, text[i], go, failure);
+        if (output[currentState] == 0)
+            continue;
+        for (int j = 0; j < patterns.size(); ++j)
+            if (output[currentState] & (1 << j))
+                std::cout << "Pattern " << patterns[j] << " occurs at " << i - patterns[j].size() + 1 << std::endl;
+    }
 }
