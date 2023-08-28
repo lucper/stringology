@@ -13,6 +13,7 @@ void msd_radixsort_ceo(char** strings, size_t n, size_t depth)
          *      bucketsize[i] stores the number of occurrences of d-th character. */
         ++bucketsize[strings[i][depth]];
 
+    /* Can be created outside the sorting function, but sacrifices stability. */
     char** sorted = malloc(n * sizeof(char*));
     
     /* External array for index of each bucket.
