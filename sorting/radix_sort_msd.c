@@ -2,47 +2,58 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define R 256
-#define MAXSTR 4
-#define bin(A) l+count[A]
+void msd_radixsort_ceo(char** strings, size_t n, size_t depth)
+{
+    /* We assume that |Sigma| = 256; hence, 'bucketsize' stores the
+     * bucket size of 256 charaters, some of which are possibly 0 (empty). */
+    size_t bucketsize[256] = {0};
 
-unsigned char *aux[MAXSTR];
+    for (size_t i = 0; i < n; ++i)
+        /* Pick d-th character of i-th string and use it to index array storing
+         * size of bucket for each character.
+         * Another semantic for bucketsize is
+         *      bucketsize[i] stores the number of occurrences of d-th character. */
+        ++bucketsize[strings[i][depth]];
 
-void msd_radix(unsigned char **a, int l, int r, int w) {
-    int count[R+1];
-  
-    for (int j = 0; j <= R; ++j) count[j] = 0;
-  
-    for (int i = l; i <= r; ++r) {
-        count[a[i][w]+1]++;
-        printf("count[%d] = %d\n", a[i][w]+1, count[a[i][w]+1]);
-    }
-    printf("\n");
-    for (int j = 1; j <= R; ++j) {
-        count[j] += count[j-1];
-        printf("count[%d] = %d\n", j, count[j]);
-    }
+    char** sorted = malloc(n * sizeof(char*));
     
-    for (int i = l; i <= r; ++i)
-        aux[count[a[i][w]]++] = a[i];
+    /* External array for index of each bucket.
+     * Another semantic for bucketindex is
+     *      bucketindex[i] stores the number of occurrences of (i-1)-th character,
+     * where bucketindex[0] is deined to be 0. */
+    static size_t bucketindex[256];
+    bucketindex[0] = 0;
 
-    // debug
-    for (int i = 0; i < MAXSTR; ++i) printf("%s\n", aux[i]);
-    printf("\n");
+    for (size_t i = 1; i < 256; ++i)
+        /* Recurrence relation to count previous character:
+         * (#occurences of previous of i-1) + (#occurrences of i-1) */
+        bucketindex[i] = bucketindex[i - 1] + bucketsize[i - 1];
+
+    for (size_t i = 0; i < n; ++i)
+        sorted[bucketindex[strings[i][depth]]++] = strings[i];
+
+    memcpy(strings, sorted, n * sizeof(char*));
     
-    //for (int j = 0; j < R-1; ++j)
-    //    msd_radix(a, bin(j), bin(j+1)-1, w+1);
+    free(sorted);
+
+    size_t bsum = bucketsize[0];
+    for (size_t i = 1; i < 256; ++i) {
+        if (bucketsize[i] == 0)
+            continue;
+        msd_radixsort_ceo(strings + bsum, bucketsize[i], depth + 1);
+        bsum += bucketsize[i];
+    }
 }
 
 int main() {
-    char *strings[MAXSTR] = {"tagca", "ggcta", "actga", "atcga"};
-    unsigned char **v = malloc(MAXSTR * sizeof(unsigned char *));
+    char *strings[6] = {"she", "sells", "seashells", "by", "the", "sea"};
+    for (int i = 0; i < 6; ++i)
+        printf("%s\n", strings[i]);
 
-    for (int i = 0; i < MAXSTR; ++i) {
-        v[i] = malloc(strlen(strings[i])+1 * sizeof(unsigned char));
-        strcpy(v[i], strings[i]);
-    }
+    printf("\n");
 
-    for (int i = 0; i < MAXSTR; ++i) printf("%s\n", v[i]);
-    msd_radix(v, 0, MAXSTR-1, 0);
+    msd_radixsort_ceo(strings, 6, 0);
+
+    for (int i = 0; i < 6; ++i)
+        printf("%s\n", strings[i]);
 }
