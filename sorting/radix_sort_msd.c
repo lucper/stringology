@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "radix_sort_msd.h"
 
 void msd_radixsort_ceo(char** strings, size_t n, size_t depth)
 {
@@ -43,17 +41,4 @@ void msd_radixsort_ceo(char** strings, size_t n, size_t depth)
         msd_radixsort_ceo(strings + bsum, bucketsize[i], depth + 1);
         bsum += bucketsize[i];
     }
-}
-
-int main() {
-    char *strings[6] = {"she", "sells", "seashells", "by", "the", "sea"};
-    for (int i = 0; i < 6; ++i)
-        printf("%s\n", strings[i]);
-
-    printf("\n");
-
-    msd_radixsort_ceo(strings, 6, 0);
-
-    for (int i = 0; i < 6; ++i)
-        printf("%s\n", strings[i]);
 }
