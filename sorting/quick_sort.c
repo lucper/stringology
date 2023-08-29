@@ -58,7 +58,7 @@ int partition(int v[], int p, int r) {
     return i;
 }
 
-void qsort_three_way_partition(int v[], int l, int r) {
+void qsort_3way_partition(int v[], int l, int r) {
     if (r <= l) return;
 
     int pivot = v[r];
@@ -90,8 +90,8 @@ void qsort_three_way_partition(int v[], int l, int r) {
     for (int k = r - 1; k > q; --k, ++i)
         iswap(k, i, v);
 
-    qsort_three_way_partition(v, l, j);
-    qsort_three_way_partition(v, i, r);
+    qsort_3way_partition(v, l, j);
+    qsort_3way_partition(v, i, r);
 }
 
 /* v[p..r] */
