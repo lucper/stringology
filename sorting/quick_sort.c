@@ -58,11 +58,12 @@ int partition(int v[], int p, int r) {
     return i;
 }
 
-//static
-int three_way_partition(int v[], int l, int r) {
+void qsort_three_way_partition(int v[], int l, int r) {
+    if (r <= l) return;
+
     int pivot = v[r];
-    int i = l - 1, p = l; // my modification, p = l, elements to the left of p are 'equal'
-    int j = r, q = r - 1; // my modification, q = r - 1, elements to the right of q are 'equal'
+    int i = l - 1, p = l - 1;
+    int j = r, q = r;
 
     for (;;) {
         while (v[++i] < pivot) ;
@@ -70,9 +71,9 @@ int three_way_partition(int v[], int l, int r) {
         if (i >= j) break;
         iswap(i, j, v);
         if (v[i] == pivot)
-            iswap(i, p++, v); // my modification, increment then swap
+            iswap(i, ++p, v);
         if (v[j] == pivot)
-            iswap(j, q--, v); // my modification, increment then swap
+            iswap(j, --q, v);
     }
 
     // Put pivot after equal part.
@@ -89,10 +90,8 @@ int three_way_partition(int v[], int l, int r) {
     for (int k = r - 1; k > q; --k, ++i)
         iswap(k, i, v);
 
-    // Idea is to qsort just v[l..j] and v[i..r].
-    // Recursive calls would come here.
-
-    return ; // need to return i and j? [l..i..j..r] ?
+    qsort_three_way_partition(v, l, j);
+    qsort_three_way_partition(v, i, r);
 }
 
 /* v[p..r] */
