@@ -2,29 +2,65 @@
 #include <vector>
 #include <string>
 
-std::vector<int> query(const std::string& p, const std::string& t, const std::vector<int>& sa) {
-    int l = 0, r = sa.size() - 1;
-    std::vector<int> occurrs;
-    while (l < r) {
-        int m = (l+r) / 2;
-        std::string suffix = t.substr(sa[m], t.length()-sa[m]);
-        std::cout << sa[m] << ": " << suffix << std::endl;
-        if (p.compare(suffix) < 0) // p smaller
-            r = m-1;
-        else if (p.compare(suffix) > 0) // p greater
-            l = m+1;
+void query(const std::string& p, const std::string& t, const std::vector<int>& sa) {
+    int L, R;
+
+    L = 0, R = sa.size() - 1;
+
+    /* 7.14.3. A simple accelerant
+     * l holds the length of the longest prefix of t starting at sa[L] that matches p. 
+     * Similarly, r holds the length of the longest prefix of t starting at sa[R] that matches p.
+     * We keep tracj of the minimum between the two; this is the number of comparisons tha can be skipped. */
+    int l = 0;
+    while (t[sa[L] + l] == p[l]) ++l;
+    int r = 0;
+    while (t[sa[R] + r] == p[r]) ++r;
+    int mlr = std::min(l, r);
+
+    int lo = -1;
+    while (L < R) {
+        int M = (L + R) / 2;
+
+        int i = 0;
+        while (i < p.length() && t[sa[M] + i] == p[i]) ++i;
+
+        if (i == p.length())
+            lo = M, R = M - 1;
         else {
-            occurrs.push_back(sa[m]);
-            break;
+            if (t[sa[M] + i] < p[i])
+                L = M + 1;
+            else if (t[sa[M] + i] > p[i])
+                R = M - 1;
         }
     }
-    return occurrs;
+
+    L = 0, R = sa.size() - 1;
+    int hi = -1;
+    while (L < R) {
+        int M = (L + R + 1) / 2;
+
+        int i = 0;
+        while (i < p.length() && t[sa[M] + i] == p[i]) ++i;
+
+        if (i == p.length())
+            hi = M, L = M + 1;
+        else {
+            if (t[sa[M] + i] < p[i])
+                L = M + 1;
+            else if (t[sa[M] + i] > p[i])
+                R = M - 1;
+        }
+    }
+
+    std::cout << lo << std::endl;
+    std::cout << hi << std::endl;
 }
 
 int main() {
     std::string text = "mississippi";
-    // TODO: add algotihm to build SA
+    // TODO: add algorithm to build SA
     std::vector<int> sa = {10, 7, 4, 1, 0, 9, 8, 6, 3, 5, 2};
 
-    std::vector<int> pos = query("ppi", text, sa);
+    std::string pattern = "ssi";
+    query(pattern, text, sa);
 }
