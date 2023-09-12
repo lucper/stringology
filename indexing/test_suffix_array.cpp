@@ -23,7 +23,8 @@ std::vector<int> query(const std::string& p, const std::string& t, const std::ve
 
 int main() {
     std::string text = "mississippi";
+    // TODO: add algotihm to build SA
     std::vector<int> sa = {10, 7, 4, 1, 0, 9, 8, 6, 3, 5, 2};
+
     std::vector<int> pos = query("ppi", text, sa);
-   
 }
