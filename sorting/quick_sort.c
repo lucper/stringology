@@ -58,6 +58,31 @@ int partition(int v[], int p, int r) {
     return i;
 }
 
+void qsort_3way_partition_bentley(int v[], int n) {
+    if (n <= 1) return;
+
+    int pivot = v[0];
+    int a = 1, b = 1; // Notice that we start after the pivot's position
+    int c = n-1, d = n-1;
+
+    for (;;) {
+        while (b <= c && v[b] <= pivot) {
+            if (v[b] == pivot) iswap(a++, b, v);
+            b++;
+        }
+        while (c >= b && v[b] >= pivot) {
+            if (v[c] == pivot) iswap(d--, c, v);
+            c--;
+        }
+        if (b > c) break;
+        iswap(b++, c--, v);
+    }
+    for (int l = 0, h = c; l < a && h >= a; ) iswap(l++, h--, v);
+    for (int l = b, h = n-1; h > d && l <= d; ) iswap(l++, h--, v);
+    qsort_3way_partition_bentley(v, b-a);
+    qsort_3way_partition_bentley(v + n-(d-c), d-c); // (!) pointer arithmetic
+}
+
 void qsort_3way_partition(int v[], int l, int r) {
     if (r <= l) return;
 
