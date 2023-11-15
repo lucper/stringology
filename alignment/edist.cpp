@@ -13,16 +13,16 @@ int edist(const std::string& x, const std::string& y) {
         for (int i = 1; i <= m; ++i) {
             int cost = x[i] == y[j] ? 0 : 1;
             dist[i][j] = std::min({
-                    dist[i-1][j-1]+cost,
-                    dist[i-1][j]+1,
-                    dist[i][j-1]+1
-                });
+                dist[i-1][j-1]+cost,
+                dist[i-1][j]+1,
+                dist[i][j-1]+1
+            });
         }
     return dist[m][n];
 }
 
 int main() {
-    std::string x = "att";
-    std::string y = "atg";
+    std::string x = "ctgca";
+    std::string y = "ctggca";
     std::cout << edist(x, y) << std::endl;
 }
