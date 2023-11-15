@@ -22,7 +22,9 @@ int edist(const std::string& x, const std::string& y) {
 }
 
 int main() {
-    std::string x = "ctgca";
-    std::string y = "ctggca";
+    std::string x;
+    std::cin >> x;
+    std::string y;
+    std::cin >> y;
     std::cout << edist(x, y) << std::endl;
 }
